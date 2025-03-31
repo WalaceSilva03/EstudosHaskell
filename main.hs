@@ -29,3 +29,23 @@ foo x y = (y+9, x: [x])
 -- Retornando um Int e uma cadeia de caracteres (String)
 -- A função então retorna y+9 e cria uma lista de caracteres com o mesmo caractere inserido na chamada da função
 
+-- Exercícios
+ex1 :: [Int]
+ex1 = [11^x | x<-[0..6]]
+
+ex2 :: [Int]
+ex2 = [x+1 | x<-[0..38]]
+
+--c) ["AaBB", "AbBB", "AcBB", "AdBB", "AeBB", "AfBB","AgBB"]
+ex3 :: [String]
+ex3 = ["A" ++ [x] ++ "BB" | x <- ['a'..'g']]
+
+--d) [5,8,11,17,20,26,29,32,38,41]
+ex4 :: [Int]
+ex4 = [ x+8 | x <- [0..9]]
+
+--e) [1.0,0.5,0.25,0.125,0.0625,0.03125]
+ex5 :: [Double]
+ex5 = [1 / (2^x) | x <- [0..5]]
+
+
