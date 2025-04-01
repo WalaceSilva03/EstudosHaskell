@@ -1,3 +1,4 @@
+import Data.List (nub)
 --Capítulo 2 - Primeiros Exemplos
 --Programação funcional - Tipos de Dados e Funções
 
@@ -40,7 +41,7 @@ ex2 = [x+1 | x<-[0..38]]
 ex3 :: [String]
 ex3 = ["A" ++ [x] ++ "BB" | x <- ['a'..'g']]
 
---d) [5,8,11,17,20,26,29,32,38,41]
+--d) [5,8,11,17,20,26,29,32,38,41] -- PRECISA TERMINAR
 ex4 :: [Int]
 ex4 = [ x+8 | x <- [0..9]]
 
@@ -48,4 +49,36 @@ ex4 = [ x+8 | x <- [0..9]]
 ex5 :: [Double]
 ex5 = [1 / (2^x) | x <- [0..5]]
 
+--f) [1,10,19,28,37,46,55,64]
+ex6 :: [Int]
+ex6 = [ 1 + (x*9) | x <- [1..7]]
 
+--g) [2,4,8,10,12,16,18,22,24,28,30] -- PRECISA TERMINAR
+ex7 :: [Int]
+ex7 = []
+
+--h) ['@','A','C','D','E','G','J','L'] -- PRECISA TERMINAR
+--ex8 :: [Char]
+--ex8 = ['@' ++ [x] | x <- ['A'..'L']]
+
+-- 2.2) Crie uma função que verifique se o tamanho de uma
+-- String é par ou não. Use Bool como retorno.
+ex9 :: String -> Bool
+ex9 s = length s>10
+
+
+--2.3) Escreva uma função que receba um vetor de Strings e
+--retorne uma lista com todos os elementos em ordem reversa.
+
+--2.4) Escreva uma função que receba um vetor de Strings e
+--retorne uma lista com o tamanho de cada String. As palavras de
+--tamanho par devem ser excluídas da resposta.
+
+--2.5) Escreva a função head como composição de duas outras.
+
+--2.6) Faça uma função que receba uma String e retorne True
+-- se esta for um palíndromo; caso contrário, False 
+
+--2.7 Faça uma função que receba um inteiro e retorne uma
+--tupla, contendo: o dobro deste número na primeira coordenada, o
+--triplo na segunda, o quádruplo na terceira e o quíntuplo na quarta.
