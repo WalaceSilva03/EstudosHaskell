@@ -41,9 +41,9 @@ ex2 = [x+1 | x<-[0..38]]
 ex3 :: [String]
 ex3 = ["A" ++ [x] ++ "BB" | x <- ['a'..'g']]
 
---d) [5,8,11,17,20,26,29,32,38,41] -- PRECISA TERMINAR
+--d) [5,8,11,17,20,26,29,32,38,41]
 ex4 :: [Int]
-ex4 = [ x+8 | x <- [0..9]]
+ex4 = [x + 3 | x <- [2..39], x/=11, x/=20, x/=32, mod x 3 ==2]
 
 --e) [1.0,0.5,0.25,0.125,0.0625,0.03125]
 ex5 :: [Double]
@@ -53,18 +53,16 @@ ex5 = [1 / (2^x) | x <- [0..5]]
 ex6 :: [Int]
 ex6 = [ 1 + (x*9) | x <- [1..7]]
 
---g) [2,4,8,10,12,16,18,22,24,28,30] -- PRECISA TERMINAR
+--g) [2,4,8,10,12,16,18,22,24,28,30]
 ex7 :: [Int]
-ex7 = []
+ex7 = [x + 2 | x <- [0..28], x/=4, x/=12, x/=18, x/=24, mod x 2 == 0]
 
 --h) ['@','A','C','D','E','G','J','L'] -- PRECISA TERMINAR
---ex8 :: [Char]
---ex8 = ['@' ++ [x] | x <- ['A'..'L']]
+ex8 :: [Char]
+ex8 = [x | x <- ['@'..'L'], x/='B', x/='F', x/='H', x/='I', x/='K']
 
 -- 2.2) Crie uma função que verifique se o tamanho de uma
 -- String é par ou não. Use Bool como retorno.
-ex9 :: String -> Bool
-ex9 s = length s>10
 
 
 --2.3) Escreva uma função que receba um vetor de Strings e
