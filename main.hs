@@ -58,7 +58,7 @@ ex7 :: [Int]
 ex7 = [x + 2 | x <- [0..28], x/=4, x/=12, x/=18, x/=24, even x]
 
 --h) ['@','A','C','D','E','G','J','L'] -- PRECISA TERMINAR
-ex8 :: String
+ex8 :: [Char]
 ex8 = [x | x <- ['@'..'L'], x/='B', x/='F', x/='H', x/='I', x/='K']
 
 -- 2.2) Crie uma função que verifique se o tamanho de uma
@@ -87,3 +87,5 @@ ex13 x = x == reverse x
 --2.7 Faça uma função que receba um inteiro e retorne uma
 --tupla, contendo: o dobro deste número na primeira coordenada, o
 --triplo na segunda, o quádruplo na terceira e o quíntuplo na quarta.
+ex14 :: Int -> (Int, Int, Int, Int)
+ex14 x = (x*2, x*3, x*4, x*5)
