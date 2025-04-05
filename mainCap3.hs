@@ -102,3 +102,24 @@ data Ponto = Ponto {xval, yval :: Double}
 
 -- As duas primeiras maneiras usam o Pattern matching para enxaixar os parâmetros x e y no padrão que possui o tipo Ponto.
 -- Já a última usa o xval e yval, funções de projeção adquiridas no uso do record Syntas
+
+
+-- EXERCÍCIOS
+
+-- 3.1) Crie o tipo Pergunta com os values constructors Sim ou Nao . Faça as funções seguintes, determinando seus tipos explicitamente.
+--and' : recebe duas Perguntas como parâmetro e retorna a tabela verdade do and lógico, usando Sim como verdadeiro e Nao como falso.
+--or' : idem ao anterior, porém deve ser usado o ou lógico.
+--not' : idem aos anteriores, porém usando o not lógico.
+
+data Pergunta = Sim | Nao
+
+-- pergNum : recebe via parâmetro uma Pergunta .Retorna 0 para Nao e 1 para Sim .
+pergNum :: Pergunta -> Int
+pergNum Sim = 1
+pergNum Nao = 0
+
+--listPergs : recebe via parâmetro uma lista de Perguntas , e retorna 0 s e 1 s correspondentes aos constructores contidos na lista.
+listPergs :: [Pergunta] -> Int
+listPergs [Sim] = 1
+listPergs [Nao] = 0
+
