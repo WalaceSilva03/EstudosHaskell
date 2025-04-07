@@ -78,6 +78,8 @@ ex11 :: [String] -> [Int]
 ex11 xs = [length x | x <- xs, odd (length x)]
 
 --2.5) Escreva a função head como composição de duas outras.
+ex12 :: [Char] -> Char
+ex12 = last . reverse
 
 --2.6) Faça uma função que receba uma String e retorne True
 -- se esta for um palíndromo; caso contrário, False

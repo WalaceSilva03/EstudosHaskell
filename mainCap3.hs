@@ -107,19 +107,85 @@ data Ponto = Ponto {xval, yval :: Double}
 -- EXERCÍCIOS
 
 -- 3.1) Crie o tipo Pergunta com os values constructors Sim ou Nao . Faça as funções seguintes, determinando seus tipos explicitamente.
---and' : recebe duas Perguntas como parâmetro e retorna a tabela verdade do and lógico, usando Sim como verdadeiro e Nao como falso.
---or' : idem ao anterior, porém deve ser usado o ou lógico.
---not' : idem aos anteriores, porém usando o not lógico.
 
-data Pergunta = Sim | Nao
+data Pergunta = Sim | Nao deriving Show
 
--- pergNum : recebe via parâmetro uma Pergunta .Retorna 0 para Nao e 1 para Sim .
+-- pergNum: recebe via parâmetro uma Pergunta .Retorna 0 para Nao e 1 para Sim .
 pergNum :: Pergunta -> Int
 pergNum Sim = 1
 pergNum Nao = 0
 
---listPergs : recebe via parâmetro uma lista de Perguntas , e retorna 0 s e 1 s correspondentes aos constructores contidos na lista.
-listPergs :: [Pergunta] -> Int
-listPergs [Sim] = 1
-listPergs [Nao] = 0
+--listPergs: recebe via parâmetro uma lista de Perguntas , e retorna 0 s e 1 s correspondentes aos constructores contidos na lista.
+listPergs :: [Pergunta] -> [Int]
+listPergs ps = [pergNum p | p <- ps]
 
+--and': recebe duas Perguntas como parâmetro e retorna a tabela verdade do and lógico, usando Sim como verdadeiro e Nao como falso.
+and' :: Pergunta -> Pergunta -> Pergunta
+and' Sim Sim = Sim
+and' Sim  _  = Nao
+and'  _  Sim = Nao
+and'  _   _  = Nao
+
+--or' : idem ao anterior, porém deve ser usado o ou lógico.
+or' :: Pergunta -> Pergunta -> Pergunta
+or' Sim Sim = Sim
+or' Sim  _  = Sim
+or'  _  Sim = Sim
+or'  _   _  = Nao
+
+--not' : idem aos anteriores, porém usando o not lógico.
+not' :: Pergunta -> Pergunta
+not' Sim = Nao
+not' Nao = Sim
+
+
+--3.2) Faça o tipo Temperatura que pode ter valores Celsius ,Farenheit ou Kelvin . Implemente as funções:
+data Temperatura = Celcius | Farenheit | Kelvin deriving Show
+--converterCelsius : recebe um valor double e uma temperatura, e faz a conversão para Celsius.
+converterCelsius :: Double -> Temperatura -> Double
+converterCelsius x Farenheit = (x - 32) * 5/9
+converterCelsius x Kelvin = x - 273.15
+--converterKelvin : recebe um valor double e uma temperatura, e faz a conversão para Kelvin.
+converterKelvin :: Double -> Temperatura -> Double
+converterKelvin x Farenheit = x * 1.8 - 459.67
+converterKelvin x Celcius = x + 273.15
+--converterFarenheit : recebe um valor double e uma temperatura, e faz a conversão para Farenheit.
+converterFarenheit :: Double -> Temperatura -> Double
+converterFarenheit x Kelvin = (x - 32)/1.8 + 273.15 
+converterFarenheit x Celcius = (x - 32) * 5/9
+
+--3.3) Implemente uma função que simule o vencedor de uma partida de pedra, papel e tesoura usando tipos criados. Casos de
+--empate devem ser considerados em seu tipo.
+data Jogada = Pedra | Papel | Tesoura
+data Resultado = Jogador1 | Jogador2 | Empate deriving Show
+jokenpo :: Jogada -> Jogada -> Resultado
+jokenpo Pedra Pedra = Empate
+jokenpo Tesoura Tesoura = Empate
+jokenpo Papel Papel = Empate
+jokenpo Pedra Papel = Jogador2
+jokenpo Pedra Tesoura = Jogador1
+jokenpo Papel Pedra = Jogador1
+jokenpo Tesoura Pedra = Jogador2
+jokenpo Tesoura Papel = Jogador1
+jokenpo Papel Tesoura = Jogador2
+
+--3.4) Faça uma função que retorne uma string, com todas as vogais maiúsculas e minúsculas eliminadas de uma string passada
+--por parâmetro usando list compreenshion.
+noVogais :: String -> String
+noVogais str = [x | x<-str, x/='A', x/='E', x/='I', x/='O', x/='U', x/='a', x/='e', x/='i', x/='o', x/='u']
+
+-- 3.5) Sabe-se que as unidades imperiais de comprimento podem ser Inch , Yard ou Foot (há outras ignoradas aqui). Sabe-se
+-- que 1in=0.0254m , 1yd=0.9144m , 1ft=0.3048m. Faça a função converterMetros que recebe a unidade imperial e o valor
+-- correspondente nesta unidade. Esta função deve retornar o valor em metros.
+data UnidadeImperial = Inch | Yard | Foot deriving Show
+valor :: UnidadeImperial -> Double
+valor Inch = 0.0254
+valor Yard = 0.9144
+valor Foot = 0.3048
+converterMetros :: UnidadeImperial -> Double -> Double
+converterMetros u x = x * valor u
+
+-- Implemente também a função converterImperial , que recebe um valor em metros e a unidade de conversão. Esta função
+-- deve retornar o valor convertido para a unidade desejada.
+converterImperial :: UnidadeImperial -> Double -> Double
+converterImperial u x = x/valor u 
