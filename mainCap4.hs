@@ -42,7 +42,7 @@ dobro :: Int -> Int
 dobro x = 2*x
 
 triplo :: Int -> Int
-triplo x = 3*x 
+triplo x = 3*x
 
 -- Tal chamada nos mostra que, primeiramente, a função dobro foi argumento de ev e depois Triplo. Vamos analisar de perto o que aconteceu com a primeira
 -- ev dobro = 1 + dobro 5 = 1 + 2*5 = 1 + 10 = 11
@@ -244,3 +244,42 @@ somarCurr = somarTresNum 4 5
 --Em nosso exemplo, o primeiro argumento de $ é a função contar . Desta forma, a é uma String e b um Int , pois o
 --tipo de contar é String -> Int . Já o segundo argumento é a String "OlaAlo" , tendo 6 como retorno e este do tipo Int .
 
+--  SINTAXE EM FUNÇÕES
+
+--Os guards são uma maneira de testar várias condições em uma função, de maneira similar a um if encadeado. Por exemplo, se
+--quisermos calcular o IMC de uma pessoa e, a partir deste valor, mostrar uma mensagem na tela indicando se ela está acima do
+--peso ou não, é possível usando guards. Podemos escrever as condições de uma maneira limpa.
+
+imc p a
+ | p/ (a*a) <= 18.5 = "Abaixo do peso"
+ | p/ (a*a) <= 25.0 = "Peso Ideal"
+ | p/ (a*a) <= 30 = "Acima do peso"
+ | otherwise = "Obesidade"
+
+--Um possível tipo da função anterior é Double -> Double -> Double . Os parâmetros p e a representam peso e altura. A
+--expressão p/(a*a) representa o cálculo do IMC. A partir deste cálculo, as condições são verificadas em ordem até que alguma seja
+--True e o retorno da função (mensagem) será executada. Caso a condição seja False , a próxima condição será
+--verificada até chegar ao otherwise , que sempre será True . A cláusula where pode ajudar a facilitar a escrita da função de IMC.
+
+imc2 p a
+ | valorImc <= 18.5 = "Abaixo do peso"
+ | valorImc <= 25.0 = "Peso Ideal"
+ | valorImc <= 30 = "Acima do peso"
+ | otherwise = "Obesidade"
+ where
+    valorImc = p/(a*a)
+
+--O uso do where ajuda a não escrever a expressão p/(a*a) em toda condição. Note que, para cada padrão do pattern
+--matching, é possível ter guards próprios.
+
+-- Recursao
+
+
+-- Exercicios
+
+-- 4.1) Faça uma função que retorne a média de um [Double], usando foldl.
+ex41 :: [Double] -> Double
+ex41 xs = foldl (\count x -> count + x) 0 xs / (foldl (\ count _ -> count + 1.0) 0 xs)
+-- Primeiro o programa recebe como parâmetro uma lista de Double e retorna uma número Double, a média.
+-- Após isso, é utilizando um foldl para iterar no cálculo lambda
+-- Foldl (\count x -> count + x) 0 xs = É utilizado um foldl que inicia em 0 e vai somando ao acumulador count para cada elemento x que vai para a lista de xs
