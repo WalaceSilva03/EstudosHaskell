@@ -283,3 +283,25 @@ ex41 xs = foldl (\count x -> count + x) 0 xs / (foldl (\ count _ -> count + 1.0)
 -- Primeiro o programa recebe como parâmetro uma lista de Double e retorna uma número Double, a média.
 -- Após isso, é utilizando um foldl para iterar no cálculo lambda
 -- Foldl (\count x -> count + x) 0 xs = É utilizado um foldl que inicia em 0 e vai somando ao acumulador count para cada elemento x que vai para a lista de xs
+
+--4.2) Faça uma função que receba uma [String] e retorne todos os elementos palíndromos. Ver exercício 3.7
+ex42 :: [String] -> [String]
+ex42 xs = [x | x <- xs, x == reverse x]
+
+--4.3) Implemente uma função que filtre os números pares e outra que filtre os ímpares de uma lista recebida via parâmetro.
+ex43Pares :: [Int] -> [Int]
+ex43Pares xs = filter (\x -> mod x 2 == 0) xs
+
+ex43Impares :: [Int] -> [Int]
+ex43Impares xs = filter (\x -> mod x 2 == 1) xs
+
+--4.4) Filtre os números primos de uma lista recebida por parâmetro.
+ex44 :: [Int] -> [Int]
+ex44 xs = filter (\x -> length (filter (\y -> mod x y == 0) [1..x])==2) xs
+
+--4.5) Implemente uma função que receba uma lista de inteiros e retorne o dobro de todos, eliminando os múltiplos de 4.
+ex45 :: [Int] -> [Int]
+ex45 xs = map (*2) (filter (\x -> mod x 4 /= 0) xs)
+
+-- 4.6) Faça uma função func que receba uma função f de tipo (String -> String) , e uma String s que retorna o reverso
+-- de s concatenado com aplicação da função f em s .
