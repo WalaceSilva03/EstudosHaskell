@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use newtype instead of data" #-}
 import qualified Control.Monad.RWS as Data
 
 --5.1) Crie o tipo TipoProduto que possui os values constructors Escritorio , Informatica , Livro , Filme e Total. 

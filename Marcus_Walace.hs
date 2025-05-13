@@ -1,149 +1,373 @@
--- Exercícios Capitulo 2
-ex1 :: [Int]
-ex1 = [11^x | x<-[0..6]]
+-- Capitulo 4 - Um pouco mais sobre funções
 
-ex2 :: [Int]
-ex2 = [x+1 | x<-[0..38]]
+--Em programação funcional, funções são tratadas como valores comuns, assim como 5 é Int ou "Olá" é uma String . Ou 
+--seja, funções podem ser passadas como parâmetro e retornadas por outras funções.
 
---c) ["AaBB", "AbBB", "AcBB", "AdBB", "AeBB", "AfBB","AgBB"]
-ex3 :: [String]
-ex3 = ["A" ++ [x] ++ "BB" | x <- ['a'..'g']]
+--Além disso, se uma função espera três parâmetros e você passar dois, não há problema algum nisso. Podemos inclusive criar
+--funções sem um corpo, como vimos até o presente momento.
 
---d) [5,8,11,17,20,26,29,32,38,41]
-ex4 :: [Int]
-ex4 = [x + 3 | x <- [2..39], x/=11, x/=20, x/=32, mod x 3 ==2]
+-- LAMBDAS ----------------------------
+-- Funções podem ser usadas como valores e não necessariamante em um contexto explícito, como fizemos até aqui. Por exemplo,
+-- Não é preciso declarar a função em um contexto para usá-la. Em vez disso, é possível usá-la naturalmente como se estivessem declaradas.
+-- De uma maneira geral, lambdas têm a seguinte forma:
 
---e) [1.0,0.5,0.25,0.125,0.0625,0.03125]
-ex5 :: [Double]
-ex5 = [1 / 2^x | x <- [0..5]]
+-- \p1 p2 p3 p4 ... pn -> EXPR(p1, p2, p3 ..., pn)
 
---f) [1,10,19,28,37,46,55,64]
-ex6 :: [Int]
-ex6 = [ 1 + x*9 | x <- [1..7]]
+--Isto pode ser lido como: receba os parâmetros p1, p2, p3, p4, ..., pn, e devolva uma expressão que dependa destes n parÂmetros
 
---g) [2,4,8,10,12,16,18,22,24,28,30]
-ex7 :: [Int]
-ex7 = [x + 2 | x <- [0..28], x/=4, x/=12, x/=18, x/=24, even x]
+--Prelude> (\x -> 2*x) 4
+--8
 
---h) ['@','A','C','D','E','G','J','L'] -- PRECISA TERMINAR
-ex8 :: [Char]
-ex8 = [x | x <- ['@'..'L'], x/='B', x/='F', x/='H', x/='I', x/='K']
+--Ele indica que estamos usando um lambda que recebe um parâmetro x e devolve o dobro dele mesmo.
+--Uma função lambda só pode ser usada em contextos lcoais.
 
--- 2.2) Crie uma função que verifique se o tamanho de uma
--- String é par ou não. Use Bool como retorno.
-ex9 :: String -> Bool
-ex9 x = even (length x)
+--Prelude> (\x xs -> x : reverse xs) 'A' "UOIE"
 
---2.3) Escreva uma função que receba um vetor de Strings e
---retorne uma lista com todos os elementos em ordem reversa.
-ex10 :: [String] -> [String]
-ex10 xs = [reverse x | x <- xs]
-
---2.4) Escreva uma função que receba um vetor de Strings e
---retorne uma lista com o tamanho de cada String. As palavras de
---tamanho par devem ser excluídas da resposta.
-ex11 :: [String] -> [Int]
-ex11 xs = [length x | x <- xs, odd (length x)]
-
---2.5) Escreva a função head como composição de duas outras.
-ex12 :: [Char] -> Char
-ex12 = last . reverse
-
---2.6) Faça uma função que receba uma String e retorne True
--- se esta for um palíndromo; caso contrário, False
-ex13 :: String -> Bool
-ex13 x = x == reverse x 
-
---2.7 Faça uma função que receba um inteiro e retorne uma
---tupla, contendo: o dobro deste número na primeira coordenada, o
---triplo na segunda, o quádruplo na terceira e o quíntuplo na quarta.
-ex14 :: Int -> (Int, Int, Int, Int)
-ex14 x = (x*2, x*3, x*4, x*5)
+-- Este recebe um elemtno  e uma lista de elementos xs, devolvendo o primeiro elemento na frenta da lista xs em ordem reversa
 
 
-------------------------------------------------------------------------------------------------------------
--- EXERCÍCIOS - Capitulo 3
+-- Funções em Alta Ordem
+-- Como dito na introdução do presente capítulo, funções podem ser passadas como parâmetro ou retornar outras funções. Uma função que possua alguma
+-- parâmetro oou retornar outras funções. Uma função que possua alguma das características citadas é dita como uma função de alta ordem, ou high-Order Function
 
--- 3.1) Crie o tipo Pergunta com os values constructors Sim ou Nao . Faça as funções seguintes, determinando seus tipos explicitamente.
+ev :: (Int -> Int) -> Int
+ev f = 1 + f 5
 
-data Pergunta = Sim | Nao deriving Show
+-- isto é uma função de alta ordem. O tipo de ev :: (Int -> Int) -> Int consiste em uma entrada do tipo Int -> Int e uma saída inteira
+-- os parênteses indicam que a entrada tem um tipo de uma função em vez de dois inteiros
 
--- pergNum: recebe via parâmetro uma Pergunta .Retorna 0 para Nao e 1 para Sim .
-pergNum :: Pergunta -> Int
-pergNum Sim = 1
-pergNum Nao = 0
+--A expressão de ev pode ser em um primeiro momento esquisita, porém é de fácil entendimento. Ela significa: calcule a função f, que foi recebida como argumento, ao valor 5 e depois some 1. Considere as funções auxiliares:
 
---listPergs: recebe via parâmetro uma lista de Perguntas , e retorna 0 s e 1 s correspondentes aos constructores contidos na lista.
-listPergs :: [Pergunta] -> [Int]
-listPergs ps = [pergNum p | p <- ps]
+dobro :: Int -> Int
+dobro x = 2*x
 
---and': recebe duas Perguntas como parâmetro e retorna a tabela verdade do and lógico, usando Sim como verdadeiro e Nao como falso.
-and' :: Pergunta -> Pergunta -> Pergunta
-and' Sim Sim = Sim
-and' Sim  _  = Nao
-and'  _  Sim = Nao
-and'  _   _  = Nao
+triplo :: Int -> Int
+triplo x = 3*x
 
---or' : idem ao anterior, porém deve ser usado o ou lógico.
-or' :: Pergunta -> Pergunta -> Pergunta
-or' Sim Sim = Sim
-or' Sim  _  = Sim
-or'  _  Sim = Sim
-or'  _   _  = Nao
+-- Tal chamada nos mostra que, primeiramente, a função dobro foi argumento de ev e depois Triplo. Vamos analisar de perto o que aconteceu com a primeira
+-- ev dobro = 1 + dobro 5 = 1 + 2*5 = 1 + 10 = 11
 
---not' : idem aos anteriores, porém usando o not lógico.
-not' :: Pergunta -> Pergunta
-not' Sim = Nao
-not' Nao = Sim
+-- A função dobro foi plugada em f, assim, ela é chamda como argumento 5, resultando em 10 como retorno. Nesse retorno foi somado 1 ao final, dando 11.
+-- Exemplos de funções que retornam outras terão mais sentido nas seções seguintes e serão suprimidos no momento.
+
+-- Note que é possível usar lambdas em vez das funções dobro e triplo, como segue:
+-- Prelude> ev (\x -> 2*x)
+-- 11
+-- Prelude> ev (\x -> 3*x)
+--16
+
+-- Escrevendo desta maneira, é permitido uma maior produtividade, pois, não será necessário escrever o corpo das funções e recarregar o módulo novamente.
+
+-- CURRYING -----------------------------------
+-- Currying é uma técnica que consistem em transformar a chamada de uma função (Retorno valorado), que recebe múltiplos argumentos, em uma avaliação de uma sequência de funções.
+-- Você pode fixar uma quantidade de argumentos e deixar o restante variável
+
+somarTresNum :: Int -> Int -> Int -> Int
+somarTresNum x y z = x + y + z
+
+somarCurr :: Int -> Int
+somarCurr = somarTresNum 4 5
+
+-- A função somarCurr possui fixo os parâmetros x e y da função somarTresNum, deixando z Livre para variar. Portanto, podemos inspecionar o tipo de somarCurr
+-- Prelude> :t somarCurr
+-- somarCurr :: Int -> Int
+
+-- Como esperado, o tipo de somarCurr é Int, pois, apenas uma variável foi mantida livre na definição de somarCurr. 
+-- O interessante é que podemos agrupar as últimas duas flechas susando parênteses no tipo de somarTresNum. Veja
+
+-- somarTresNum :: Int ->Int -> (Int -> Int)
+
+-- Fazneod isso, fica claro que, a partir da função somarTresNum, se passarmos dois argumentos a ela, o retorno será uma função de um parâmetro Int e seu retorno Int, fazendo com que
+-- Ela se torne de alta ordem. Sempre que houver parênteses encobrindo flechas e tipos, consideraremos que o parÂmetro ou o retorno é uma função.
+
+-- Em suma, sempre que uma função tiver algum parâmetro suprimido, o retorno será uma função. Esta possuirá como 
+-- parâmetro todas as variáveis livres, e sua avaliação levará em conta todos os parâmetros que foram deixados fixos e os que ficaram
+-- livres também.
+
+-- EXEMPLOS DE FUNÇÕES DE ALTA ORDEM
+
+-- FUNCAO MAP
+-- A função map tem como objetivo aplicar uma função f, recebida via parâmetro, a todos os elementos de uma lista l ,
+-- também recebida via parâmetro. O retorno desta função é uma nova lista, na qual seus elementos são as saídas da função f ,
+-- tendo como argumento os elementos da lista.
+
+-- Prelude > :t map
+-- map :: (a -> b) -> [a] -> [b]
+
+-- O tipo de entrada da lista deve ser o mesmo tipo da entrada da função e o tipo da saída será o mesmo da saída da função. Usando
+-- o conceito de currying e funções de alta ordem, podemos enxergar o map como:
+
+-- map :: (a -> b) -> ([a] -> [b])
+
+-- Ao suprimir a lista de tipo [a] , como parâmetro da função map , o retorno obtido é uma função do tipo [a] -> [b] . Ou
+-- seja, sua função foi levantada de a -> b para [a] -> [b] , isto é, a função que inicialmente trabalhava com estruturas simples passa
+-- agora a trabalhar com listas.
+
+-- Prelude map (+2) [1..5]
+-- [3, 4, 5, 6, 7]
+
+-- Neste exemplo, a função map recebe via parâmetro a função (+2) , que é um currying da função (+) , tendo o valor 2 fixo
+-- em seu segundo argumento, e distribui essa função a todos os elementos da lista [1,2,3,4,5] . Assim, é efetuado: 1+2 , 2+2 ,
+-- 3+2 , 4+2 e 5+2 . Note que o uso do map se assemelha ao list compreeshion visto no primeiro capítulo
+
+-- FUNCAO FOLDL
+-- Para a função foldl , devem ser passados uma função f com dois parâmetros e também um valor inicial. Essa função dobra a
+-- lista começando da esquerda, isto é, a função f é aplicada ao valor inicial e ao primeiro elemento da lista. O retorno dela mais o
+-- segundo elemento devem ser os parâmetros para a nova aplicação de f até acabarem os elementos da lista. Você pode pensar que a
+-- função foldl se comporta como um acumulador se comparada ao paradigma imperativo.
+
+-- Prelude > :t foldl
+-- foldl :: (b -> a -> b) -> b -> [a] -> b
+
+-- O primeiro parâmetro (de foldl ) deve ser uma função na qual sua primeira entrada seja o mesmo tipo b que o valor inicial
+-- (segundo parâmetro de foldl ), e sua segunda entrada com o mesmo tipo a dos elementos contidos na lista do terceiro
+-- parâmetro (de foldl ).
+
+-- Prelude> foldl (+) 0 [1..4]
+-- Prelude> 10
+
+-- A função soma (+) terá como parâmetro o valor inicial 0 e o primeiro valor da lista 1 . A função soma será aplicada a estes
+-- dois parâmetros, resultando em 1. O valor 1 do acúmulo ( 0+1 ) será um novo parâmetro, junto com o valor 2 da lista, e ambos
+-- sofrerão a aplicação da soma novamente, resultando em 3 . Esse valor 3 , juntamente com o valor 3 da lista, sofrerá a aplicação de
+-- (+) novamente, resultando em 6 . O valor 6 e o elemento 4 da lista sofrerão pela última vez a aplicação de (+) , resultando em 10 .
+
+--(+) 0 1 [2, 3, 4]
+--(+) 1 2 [3, 4]
+--(+) 3 3 [4]
+--(+) 6 4 []
+--10
+
+-- Note que em haskell, 0 + 1 é a versão infixa de (+) 0 1, e ambas produzem o mesmo valor, 1
+--Prelude> foldl (\xs x -> x:xs) [] ''Fatec''
+--''cetaF''
+
+-- Observe que (\xs x-> x : xs ) é um lambda, que nada mais é do que uma função sem corpo. Esta função recebe uma lista
+-- xs e um valor x , e retorna o elemento x inserido à frente da lista xs .
+
+--FUNCAO FILTER
+-- O filter é uma função que recebe uma outra função f de retorno booleano e uma lista de elementos. Ele retorna uma outra
+-- lista contendo os elementos que foram argumentos de f e que tiveram True como retorno.
+
+-- filter(>0) [-4..4]
+-- [1,2,3,4]
+
+--Neste exemplo, é filtrado todos os elementos maiores que zero. A função recebida (>0) se equivale ao lambda \x-> x > 0 , que
+--recebe um valor x . Este retorna True caso seja maior que zero, e False caso contrário. Os elementos [1,2,3,4] são todos que
+--satisfazem a condição da função (>0) e, no caso, são retornados pela função filter.
+
+--Prelude> filter
+--filter :: (a -> Bool) -> [a] -> [a]
+
+--O tipo da função filter nos diz que a função do primeiro parâmetro precisa retornar uma expressão booleana. A entrada da
+--função do primeiro parâmetro deve ter um tipo a , que deve ser o mesmo tipo dos elementos do segundo parâmetro, de tipo [a].
+
+--Funcao.
+-- A composição de funções, introduzida no segundo capítulo, é uma noção muito importante em programação funcional e merece
+-- toda atenção aqui nesta seção. A composição de funções é algo cotidiano na vida do programador. É o simples ato de chamar duas
+-- funções, ou mais, sendo que o retorno de uma é o argumento da outra.
+
+-- Para acompanhar os exemplos a seguir, vamos considerar as funções:
+--traseira :: String -> String
+--traseira [] = []
+--traseira (x:xs) = xs
+
+-- contar :: String -> Int
+-- contar length
+
+--primeira função retorna uma lista vazia, caso o argumento seja vazio, e o fim da lista xs , caso o argumento tenha pelo menos
+--um elemento (ignorando assim o primeiro elemento e devolvendo o resto). A função contar é apenas uma renomeação da função
+--length , que conta elementos de uma lista de qualquer tipo. Nesse caso, deixamos a entrada como String por questões
+--didáticas.
+
+--Na expressão contar(traseira "Haskell") , a função traseira será executada em um primeiro momento e terá como
+--retorno "askell" . Após este passo, obtemos a chamada contar "askell" - note que o retorno de traseira é o argumento de
+--contar - que produzirá o retorno 6 .
+
+--O exemplo parece simples, porém, na programação funcional, tem um motivo teórico muito bem fundamentado. Antes de
+--continuar, note que contar(traseira "Haskell") se equivaleria a contar(traseira("Haskell")) , que é um estilo 
+--corriqueiro nas linguagens de programação imperativa.
+
+-- A função pode ser melhorada utilizando a função infixa . (ponto)
+
+--Prelude> (contar. traseira) "Haskell"
+--6
+
+-- Esta função é de alta ordem, por conta do seu tipo
+
+-- Prelude> :t (.)
+-- (.) :: (b -> c) -> (a -> b) -> (a -> c)
+
+--Ela diz o seguinte: essa função recebe duas outras de tipos (b -> c) e (a -> b) , retornando uma outra de tipo (a -> c) .
+--Note que a , b e c são qualquer tipo da linguagem ( Int , Double , [Int] , String , (Int, String) etc.).
+
+--Retomando a frase "o retorno de uma função deve ser o argumento da outra", é possível ver que o tipo incumbido de
+--realizar esta façanha é o b , pois é a saída do segundo parâmetro de tipo (a -> b) e a entrada do primeiro parâmetro de tipo (b
+-- -> c) . Portanto, o tipo da função composta (retorno de . ) se dá pela entrada da primeira função a e pela saída da segunda c .
+
+--Vamos analisar agora o exemplo da expressão (contar . traseira) "Haskell" :
+
+--Prelude> :t traseira
+-- tail' :: String -> String
+--Prelude :t contar
+-- contar :: String -> Int
+
+-- FUNCAO $
+
+--A função infixa $ recebe uma função e um valor, e aplica a função neste valor. Veja um exemplo:
+--Prelude> contar $ "Ola"
+--3
+
+-- Aparentemente, não há diferença alguma com uma chamada de função simples:
+-- Prelude> contar "Ola"
+--3
+
+-- Porém, a diferença está quando usamos os parênteses para dar prioridade nas operações. Quando calculamos o tamanho de uma
+-- lista usando a concatenação, devemos, por exemplo, usar parênteses:
+
+-- Prelude> contar ("ola" ++ "Alo")
+-- 6
+
+-- Fazemos isso para indicar que a concatenação será efetuada e seu retorno entrará na função contar 
+
+-- A função $ é uma maneira fácil de se livrar da poluição causada pelo uso excessivo de parênteses - como é habitual em
+-- muitas linguagens -, deixando o código mais claro
+-- Prelude> contar $ "ola" ++ "Alo"
+-- 6
+
+--Como $ possui uma precedência à direita maior que ++ ,primeiro será calculado "Ola" ++ "Alo" , e depois contar
+--"OlaAlo" , retornando 6 . Inspecionando o tipo de $ , podemos ver:
+
+--Prelude> :t ($)
+-- ($) :: (a -> b) -> a -> b
+
+--Ela recebe uma função que recebe uma função de tipo a e retorno b , e um valor de tipo a devolvendo um valor de tipo b .
+--Em nosso exemplo, o primeiro argumento de $ é a função contar . Desta forma, a é uma String e b um Int , pois o
+--tipo de contar é String -> Int . Já o segundo argumento é a String "OlaAlo" , tendo 6 como retorno e este do tipo Int .
+
+--  SINTAXE EM FUNÇÕES
+
+--Os guards são uma maneira de testar várias condições em uma função, de maneira similar a um if encadeado. Por exemplo, se
+--quisermos calcular o IMC de uma pessoa e, a partir deste valor, mostrar uma mensagem na tela indicando se ela está acima do
+--peso ou não, é possível usando guards. Podemos escrever as condições de uma maneira limpa.
+
+imc p a
+ | p/ (a*a) <= 18.5 = "Abaixo do peso"
+ | p/ (a*a) <= 25.0 = "Peso Ideal"
+ | p/ (a*a) <= 30 = "Acima do peso"
+ | otherwise = "Obesidade"
+
+--Um possível tipo da função anterior é Double -> Double -> Double . Os parâmetros p e a representam peso e altura. A
+--expressão p/(a*a) representa o cálculo do IMC. A partir deste cálculo, as condições são verificadas em ordem até que alguma seja
+--True e o retorno da função (mensagem) será executada. Caso a condição seja False , a próxima condição será
+--verificada até chegar ao otherwise , que sempre será True . A cláusula where pode ajudar a facilitar a escrita da função de IMC.
+
+imc2 p a
+ | valorImc <= 18.5 = "Abaixo do peso"
+ | valorImc <= 25.0 = "Peso Ideal"
+ | valorImc <= 30 = "Acima do peso"
+ | otherwise = "Obesidade"
+ where
+    valorImc = p/(a*a)
+
+--O uso do where ajuda a não escrever a expressão p/(a*a) em toda condição. Note que, para cada padrão do pattern
+--matching, é possível ter guards próprios.
+
+-- Recursao
 
 
---3.2) Faça o tipo Temperatura que pode ter valores Celsius ,Farenheit ou Kelvin . Implemente as funções:
-data Temperatura = Celcius | Farenheit | Kelvin deriving Show
---converterCelsius : recebe um valor double e uma temperatura, e faz a conversão para Celsius.
-converterCelsius :: Double -> Temperatura -> Double
-converterCelsius x Farenheit = (x - 32) * 5/9
-converterCelsius x Kelvin = x - 273.15
---converterKelvin : recebe um valor double e uma temperatura, e faz a conversão para Kelvin.
-converterKelvin :: Double -> Temperatura -> Double
-converterKelvin x Farenheit = x * 1.8 - 459.67
-converterKelvin x Celcius = x + 273.15
---converterFarenheit : recebe um valor double e uma temperatura, e faz a conversão para Farenheit.
-converterFarenheit :: Double -> Temperatura -> Double
-converterFarenheit x Kelvin = (x - 32)/1.8 + 273.15 
-converterFarenheit x Celcius = (x - 32) * 5/9
+-- Exercicios
 
---3.3) Implemente uma função que simule o vencedor de uma partida de pedra, papel e tesoura usando tipos criados. Casos de
---empate devem ser considerados em seu tipo.
-data Jogada = Pedra | Papel | Tesoura
-data Resultado = Jogador1 | Jogador2 | Empate deriving Show
-jokenpo :: Jogada -> Jogada -> Resultado
-jokenpo Pedra Pedra = Empate
-jokenpo Tesoura Tesoura = Empate
-jokenpo Papel Papel = Empate
-jokenpo Pedra Papel = Jogador2
-jokenpo Pedra Tesoura = Jogador1
-jokenpo Papel Pedra = Jogador1
-jokenpo Tesoura Pedra = Jogador2
-jokenpo Tesoura Papel = Jogador1
-jokenpo Papel Tesoura = Jogador2
+-- 4.1) Faça uma função que retorne a média de um [Double], usando foldl.
+ex41 :: [Double] -> Double
+ex41 xs = foldl (\count x -> count + x) 0 xs / (foldl (\ count _ -> count + 1.0) 0 xs)
+-- Primeiro o programa recebe como parâmetro uma lista de Double e retorna uma número Double, a média.
+-- Após isso, é utilizando um foldl para iterar no cálculo lambda
+-- Foldl (\count x -> count + x) 0 xs = É utilizado um foldl que inicia em 0 e vai somando ao acumulador count para cada elemento x que vai para a lista de xs
 
---3.4) Faça uma função que retorne uma string, com todas as vogais maiúsculas e minúsculas eliminadas de uma string passada
---por parâmetro usando list compreenshion.
-noVogais :: String -> String
-noVogais str = [x | x<-str, x/='A', x/='E', x/='I', x/='O', x/='U', x/='a', x/='e', x/='i', x/='o', x/='u']
+--4.2) Faça uma função que receba uma [String] e retorne todos os elementos palíndromos. Ver exercício 3.7
+ex42 :: [String] -> [String]
+ex42 xs = [x | x <- xs, x == reverse x]
 
--- 3.5) Sabe-se que as unidades imperiais de comprimento podem ser Inch , Yard ou Foot (há outras ignoradas aqui). Sabe-se
--- que 1in=0.0254m , 1yd=0.9144m , 1ft=0.3048m. Faça a função converterMetros que recebe a unidade imperial e o valor
--- correspondente nesta unidade. Esta função deve retornar o valor em metros.
-data UnidadeImperial = Inch | Yard | Foot deriving Show
-valor :: UnidadeImperial -> Double
-valor Inch = 0.0254
-valor Yard = 0.9144
-valor Foot = 0.3048
-converterMetros :: UnidadeImperial -> Double -> Double
-converterMetros u x = x * valor u
+--4.3) Implemente uma função que filtre os números pares e outra que filtre os ímpares de uma lista recebida via parâmetro.
+ex43Pares :: [Int] -> [Int]
+ex43Pares xs = filter (\x -> mod x 2 == 0) xs
 
--- Implemente também a função converterImperial , que recebe um valor em metros e a unidade de conversão. Esta função
--- deve retornar o valor convertido para a unidade desejada.
-converterImperial :: UnidadeImperial -> Double -> Double
-converterImperial u x = x/valor u 
+ex43Impares :: [Int] -> [Int]
+ex43Impares xs = filter (\x -> mod x 2 == 1) xs
+
+--4.4) Filtre os números primos de uma lista recebida por parâmetro.
+ex44 :: [Int] -> [Int]
+ex44 xs = filter (\x -> length (filter (\y -> mod x y == 0) [1..x])==2) xs
+
+--4.5) Implemente uma função que receba uma lista de inteiros e retorne o dobro de todos, eliminando os múltiplos de 4.
+ex45 :: [Int] -> [Int]
+ex45 xs = map (*2) (filter (\x -> mod x 4 /= 0) xs)
+
+-- 4.6) Faça uma função func que receba uma função f de tipo (String -> String) , e uma String s que retorna o reverso
+-- de s concatenado com aplicação da função f em s .
+
+--5.1) Crie o tipo TipoProduto que possui os values constructors Escritorio , Informatica , Livro , Filme e Total. 
+--O tipo Produto possui um value constructor - de mesmo nome - e os campos valor ( Double ), tp ( TipoProduto )
+--e um value constructor Nada , que representa a ausência de um Produto .
+
+--Deseja-se calcular o valor total de uma compra, de modo a não ter nenhuma conversão para inteiro e de forma combinável. Crie
+--uma instância de monoide para Produto , de modo que o retorno sempre tenha Total no campo tp e a soma dos dois produtos
+--em valor . Explique como seria o exercício sem o uso de monoides. Qual(is) seria(m) a(s) diferença(s)?
+
+data TipoProduto = Escritorio | Informatica | Livro | Filme | Total deriving (Show, Eq)
+data Produto = Produto { valor :: Double, tp :: TipoProduto } | Nada deriving (Show, Eq)
+
+instance Semigroup Produto where
+    (<>) Nada p = p
+    (<>) p Nada = p
+    (<>) (Produto v1 _) (Produto v2 _) = Produto (v1 + v2) Total
+
+instance Monoid Produto where
+    mempty = Nada
+
+-- 5.2) Crie uma função totalGeral que recebe uma lista de produtos e retorna o preço total deles usando o monoide anterior.
+totalGeral :: [Produto] -> Produto
+totalGeral = mconcat
+
+--5.3) A função min no Haskell retorna o menor entre dois números, por exemplo, min 4 5 = 4 .
+--Crie um tipo Min com um campo inteiro, que seja instância de Ord , Eq e Show (deriving).
+--Crie uma instância de Monoid para Min ( maxBound representa o maior inteiro existente no Haskell).
+--Quanto vale a expressão Min (-32) <> Min (-34) <> Min (-33) ?
+--Explique sua escolha para o mempty
+
+data Min = Min Int deriving (Ord, Eq, Show)
+
+instance Semigroup Min where
+    Min x <> Min y = Min (min x y)
+
+instance Monoid Min where
+    mempty = Min maxBound
+
+--5.4) Crie uma função minAll que recebe um [Min] e retorna um Min contendo o menor valor.
+
+minAll :: [Min] -> Min
+minAll = mconcat
+
+--5.5) Crie o tipo Paridade com os values constructors Par e Impar . Crie o typeclass ParImpar que contém a função decide
+-- :: a -> Paridade e possui as instâncias: Para Int : noção de Par/Impar de Int
+-- Para [a] : uma lista de elementos qualquer é Par se o número de elementos o for.
+-- Bool : False como Par , True como Impar .
+
+data Paridade = Par | Impar deriving Show
+
+class ParImpar a where
+    decide :: a -> Paridade
+
+instance ParImpar Int where
+    decide x
+        | even x = Par
+        | otherwise = Impar
+
+instance ParImpar [a] where
+    decide x
+        | even (length x) = Par
+        | otherwise = Impar
+
+instance ParImpar Bool where
+    decide False = Par
+    decide True = Impar
