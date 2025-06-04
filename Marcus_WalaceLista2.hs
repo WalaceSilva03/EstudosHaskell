@@ -1,4 +1,5 @@
 import Control.Monad
+import Text.Printf
 --7.1) Faça uma instância de Functor para o tipo Coisa, definido no início do capítulo 5.
 --A	função g deve "ir para dentro" em todas	as coordenadas de Coisa. No caso de ZeroCoisa, o fmap deve retornar ZeroCoisa.
 
@@ -128,19 +129,58 @@ mainEx2 = do
 
 -- 9.3)	Baseando-se	no	exemplo	5,	faça	um	jogo	de	Pedra,	Papel	e Tesoura.
 
-data Resultado = Vencedor | Perdedor | Empate deriving (Show)
+{-
+data Jogada = Pedra | Papel | Tesoura deriving (Show, Eq, Enum, Bounded, Read)
 
-data Jogada = Pedra | Papel | Tesoura deriving (Show, Eq, Enum)
+resultado :: Jogada -> Jogada -> String
+resultado jogador cpu
+    | jogador == cpu = "Empate!"
+    | (jogador == Pedra && cpu == Tesoura)
+        || (jogador == Tesoura && cpu == Papel)
+        || (jogador == Papel && cpu == Pedra)  = "Você venceu"
+    | otherwise = "Empate"
 
 mainEx3 :: IO()
 mainEx3 = do
-    let acertou True = Vencedor
-        acertou False = Perdedor
-        acertou _     = Empate
-    JogadaCPU <- return [CPUescolha x | x<- [Pedra .. Tesoura]]
-    EscolhaCPU <- randomRIO (1, length JogadaCPU)
-    Jogada <- return $ JogadaCPU !! EscolhaCPU
-    putStrLn "Digite uma jogada de Pedra, Papel ou Tesoura"
-    EscolhaPlayer <- readLn
-    putStrLn $ "Sua escolha foi " ++ Show (EscolhaPlayer)
-    putStrLn $ acertou $ Jogada == EscolhaPlayer
+    putStrLn "Escolha sua jogada (Pedra, Papel ou Tesoura)"
+    x <- getLine
+    let jogador = read x :: Jogada
+    indiceCpu <- randomRIO (fromEnum (minBound :: Jogada), fromEnum(maxBound :: Jogada))
+    let cpu = toEnum indiceCpu :: Jogada
+
+    putStrLn $ "Computador jogou: " ++ show cpu
+    putStrLn $ resultado jogador cpu
+-}
+
+-- 9.4)	Faça	um	programa	 que	calcule	uma	equação	do	 segundo grau,	a	partir	dos	dados	digitados	pelo	usuário.
+
+x1 :: Double -> Double -> Double -> Double
+x1 a b c = ((-b) + sqrt (b * b - 4 * a * c)) / (2 * a)
+
+x2 :: Double -> Double -> Double -> Double
+x2 a b c = ((-b) - sqrt (b * b - 4 * a * c)) / (2 * a)
+
+mainEx4 :: IO()
+mainEx4 = do
+    putStrLn "Digite o valor de a"
+    a <- readLn
+    putStrLn "Digite o valor de b"
+    b <- readLn
+    putStrLn "Digite o valor de c"
+    c <- readLn
+
+    let delta = b * b - 4 * a * c
+    if delta < 0 then
+        putStrLn "A equação não possui raízes reais"
+    else do
+        putStrLn "X1: "
+        print $ x1 a b c
+        putStrLn "X2: "
+        print $ x2 a b c
+
+
+mainEx8 :: IO()
+mainEx8 = do
+    
+    lista <- fmap (map words . lines) $ readFile "C:\\Users\\Walace\\Desktop\\Haskell\\EstudosHaskell\\DocumentoHaskell.txt"
+    print $ lista
